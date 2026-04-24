@@ -2,24 +2,39 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "../lib/supabase";
 import { generateId } from "../utils/storage";
 
+async function getUserId() {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session) return session.user.id;
+  // Should not happen (supabase.js signs in on load), but wait briefly if needed
+  const { data } = await supabase.auth.signInAnonymously();
+  return data?.user?.id ?? null;
+}
+
 export function useReminders() {
   const [reminders, setReminders] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase
-      .from("reminders")
-      .select("*")
-      .then(({ data }) => {
-        if (data) setReminders(data);
-        setLoading(false);
-      });
+    const load = async () => {
+      const userId = await getUserId();
+      if (!userId) return;
+      const { data } = await supabase
+        .from("reminders")
+        .select("*")
+        .eq("user_id", userId);
+      if (data) setReminders(data);
+      setLoading(false);
+    };
+    load();
   }, []);
 
   const addReminder = useCallback(async (form) => {
+    const userId = await getUserId();
+    if (!userId) return;
     const reminder = {
       id: generateId(),
       ...form,
+      user_id: userId,
       done: false,
       triggered: false,
       created_at: Date.now(),
