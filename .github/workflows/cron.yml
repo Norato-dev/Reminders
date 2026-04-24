@@ -11,6 +11,6 @@ jobs:
     steps:
       - name: Call cron endpoint
         run: |
-          curl -s -o /dev/null -w "%{http_code}" \
+          curl -s \
             -X GET "${{ secrets.APP_URL }}/api/cron" \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"
