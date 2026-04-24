@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="#FFF5F7"/>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <!-- Bell body -->
+  <path d="M256 96c-88 0-144 64-144 144v56l-24 32v16h336v-16l-24-32v-56c0-80-56-144-144-144z" fill="#E8748A"/>
+  <!-- Bell bottom detail -->
+  <ellipse cx="256" cy="344" rx="144" ry="16" fill="#D96080"/>
+  <!-- Clapper -->
+  <circle cx="256" cy="376" r="28" fill="#E8748A"/>
+  <circle cx="256" cy="376" r="20" fill="#FFF5F7"/>
+  <!-- Handle -->
+  <rect x="244" y="72" width="24" height="32" rx="12" fill="#E8748A"/>
+  <!-- Shine -->
+  <ellipse cx="220" cy="160" rx="18" ry="30" fill="rgba(255,255,255,0.25)" transform="rotate(-20 220 160)"/>
+  <defs>
+    <radialGradient id="bg" cx="30%" cy="20%">
+      <stop offset="0%" stop-color="#FADADF"/>
+      <stop offset="100%" stop-color="#FFF5F7"/>
+    </radialGradient>
+  </defs>
+</svg>
