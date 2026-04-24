@@ -5,12 +5,14 @@ import { useToasts } from "./hooks/useToasts";
 import { useReminderForm } from "./hooks/useReminderForm";
 import { useNotifications } from "./hooks/useNotifications";
 import { usePushSubscription } from "./hooks/usePushSubscription";
+import { useSettings } from "./hooks/useSettings";
 import { Header } from "./components/layout/Header";
 import { NotifBanner } from "./components/banners/NotifBanner";
 import { StatsRow } from "./components/ui/StatsRow";
 import { Filters } from "./components/ui/Filters";
 import { ReminderList } from "./components/reminders/ReminderList";
 import { ReminderModal } from "./components/modals/ReminderModal";
+import { SettingsModal } from "./components/modals/SettingsModal";
 import { ToastContainer } from "./components/ui/ToastContainer";
 import "./styles/app.css";
 
@@ -21,8 +23,10 @@ export default function App() {
   const { form, setForm, showModal, editId, openCreate, openEdit, closeModal } = useReminderForm();
   const { notifPerm, requestNotif, sendNotification } = useNotifications();
   const { subscribe } = usePushSubscription();
+  const { settings, updateSetting } = useSettings();
   const [filter, setFilter] = useState("all");
   const [ringingId, setRingingId] = useState(null);
+  const [showSettings, setShowSettings] = useState(false);
 
   // Auto-register push subscription if permission already granted
   useEffect(() => {
@@ -40,7 +44,7 @@ export default function App() {
         if (r.done || r.triggered) return;
         const dt = new Date(`${r.date}T${r.time}`);
         if (Math.abs(now - dt) < 30000) {
-          triggerAlarm();
+          triggerAlarm(settings.tone, settings.volume);
           setRingingId(r.id);
           addToast(`⏰ ${r.title}`, r.description || "¡Es hora de tu recordatorio!");
           sendNotification(r.title, r.description || "¡Es hora de tu recordatorio!");
@@ -98,7 +102,7 @@ export default function App() {
   return (
     <>
       <div className="app">
-        <Header onNew={openCreate} />
+        <Header onNew={openCreate} onSettings={() => setShowSettings(true)} />
         {notifPerm === "default" && <NotifBanner onActivate={handleRequestNotif} />}
         <StatsRow upcomingCount={upcomingCount} overdueCount={overdueCount} doneCount={doneCount} />
         <Filters active={filter} onChange={setFilter} />
@@ -119,6 +123,15 @@ export default function App() {
           editId={editId}
           onSave={handleSave}
           onClose={closeModal}
+        />
+      )}
+
+      {showSettings && (
+        <SettingsModal
+          settings={settings}
+          onUpdate={updateSetting}
+          onClose={() => setShowSettings(false)}
+          previewAlarm={triggerAlarm}
         />
       )}
 

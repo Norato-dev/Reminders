@@ -12,8 +12,8 @@ export function useAlarm() {
     return audioCtxRef.current;
   };
 
-  const triggerAlarm = useCallback(() => {
-    playAlarm(getAudioCtx());
+  const triggerAlarm = useCallback((tone = "classic", volume = 0.7) => {
+    playAlarm(getAudioCtx(), tone, volume);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
