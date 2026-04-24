@@ -40,6 +40,31 @@ body {
   min-height: 100vh;
 }
 
+/* ── Tablet (≥ 768px) ─────────────────────────────────────── */
+@media (min-width: 768px) {
+  .app {
+    max-width: 960px;
+    padding: 40px 36px 90px;
+  }
+
+  .header-left h1,
+  .header-top h1 { font-size: 32px; }
+
+  .header-left p,
+  .header-date { font-size: 14px; }
+
+  .stats-row { gap: 16px; }
+
+  .stat-card { padding: 20px 14px; }
+  .stat-card .num { font-size: 36px; }
+
+  .reminders-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+}
+
 .header {
   margin-bottom: 26px;
   padding-top: 4px;

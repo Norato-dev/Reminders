@@ -33,9 +33,12 @@ export default function App() {
     if (notifPerm === "granted") subscribe();
   }, [notifPerm, subscribe]);
 
-  // Keep a ref so the interval always sees fresh reminders without restarting
+  // Keep refs so the interval always sees fresh values without restarting
   const remindersRef = useRef(reminders);
   useEffect(() => { remindersRef.current = reminders; }, [reminders]);
+
+  const settingsRef = useRef(settings);
+  useEffect(() => { settingsRef.current = settings; }, [settings]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -44,7 +47,7 @@ export default function App() {
         if (r.done || r.triggered) return;
         const dt = new Date(`${r.date}T${r.time}`);
         if (Math.abs(now - dt) < 30000) {
-          triggerAlarm(settings.tone, settings.volume);
+          triggerAlarm(settingsRef.current.tone, settingsRef.current.volume);
           setRingingId(r.id);
           addToast(`⏰ ${r.title}`, r.description || "¡Es hora de tu recordatorio!");
           sendNotification(r.title, r.description || "¡Es hora de tu recordatorio!");
