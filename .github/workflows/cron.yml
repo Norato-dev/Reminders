@@ -1,0 +1,16 @@
+name: Cron — Push Notifications
+
+on:
+  schedule:
+    - cron: '* * * * *'  # every minute
+  workflow_dispatch:       # allow manual trigger for testing
+
+jobs:
+  trigger-cron:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call cron endpoint
+        run: |
+          curl -s -o /dev/null -w "%{http_code}" \
+            -X GET "${{ secrets.APP_URL }}/api/cron" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"
